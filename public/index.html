@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    
+    <title>Title Page</title>
+
+    <!-- Bootstrap CSS -->
+  
+
+        <!-- jQuery -->
+   
+    <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"> </script>
+    <!-- Bootstrap JavaScript -->
+    <script src="/socket.io/socket.io.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.js"></script>
+    
+
+
+</head>
+
+<body>
+    <h1 class="text-center">Hello World</h1>
+    <form>
+        <textarea name="tamsg" id ="tamsg" cols="30" rows ="10" class="form-control"></textarea>
+        <input type ="text" class="form-control" id="txtmsg">
+        <button id="btnSend" class="btn btn-success" type="button">Send</button>
+    </form>
+    <script>
+         $(document).ready(function(){
+            const socket = io.connect("/");
+            let chattername;
+            socket.on("acknowledge",(data) =>{
+                console.log(data.message);
+                chattername = prompt("Please enter name: ")
+            //    $("#tamsg").val(data.message);
+               //$("#tamsg").append(data);
+            })
+
+            socket.on("MsgToClient", (msg) =>{
+                console.log("msg :" , msg);
+                $("#tamsg").append(msg + "\n");
+            })
+
+            $("#btnSend").on("click",(event) =>{
+                event.preventDefault();
+
+                let message = $("#txtmsg").val();
+
+                socket.emit("MsgToServer", chattername, message);
+
+                $("#txtmsg").val('');
+            })
+        })
+            </script>
+             
+
+
+</body>
+</html>
+
+
+
